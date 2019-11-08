@@ -104,6 +104,8 @@ surveys <- read_csv("data_raw/portal_data_joined.csv")
 
 ## Tibble
 
+<img src="img/tibble.png" width="50"/>
+
 After importing data into R we need to check if the data has been loaded into R correctly.
 ```{r, eval=TRUE, results=TRUE, purl=FALSE}
 # Display the first 6 rows of the dataset
@@ -301,7 +303,7 @@ select(surveys, -record_id, -species_id)
 
 ## Filtering rows
 
-To remove rows from a data frame or tibble use the `filter` function from the `dplyr` package.  The first argument is the data frame or tiblle to perform the filtering on and the next arguments are the conditions on which to keep the rows. 
+To remove rows from a data frame or tibble use the `filter` function from the `dplyr` package.  The first argument is the data frame or tibble to perform the filtering on and the next arguments are the conditions on which to keep the rows. 
 
 ### Filtering rows by values
 
