@@ -891,9 +891,9 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     labs(title = "Observed genera through time",
          x = "Year of observation",
          y = "Number of animals")  +
-    theme(axis.text.x = element_text(size=7, angle=90, vjust=0.5), 
-          axis.text.y = element_text(size=7), 
-          strip.text=element_text(size=7, angle=45))
+    theme(axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5), 
+          axis.text.y = element_text(size = 7), 
+          strip.text=element_text(size = 7, angle = 45))
 ```
          
          
@@ -908,13 +908,13 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     labs(title = "Observed genera through time",
          x = "Year of observation",
          y = "Number of animals")  +
-    theme(axis.text.x = element_text(size=7, angle=90, vjust=0.5), 
-          axis.text.y = element_text(size=7), 
-          strip.text=element_text(size=7, angle=45)) +
+    theme(axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5), 
+          axis.text.y = element_text(size = 7), 
+          strip.text = element_text(size = 7, angle = 45)) +
     scale_colour_brewer("Sex", 
-                       palette="Set1", 
-                       breaks=c("F", "M"), 
-                       labels=c("Female", "Male"))
+                       palette = "Set1", 
+                       breaks = c("F", "M"), 
+                       labels = c("Female", "Male"))
 ```
 
 >Note: If you would like to see what other palettes are available please see [http://colourbrewer2.org/#type=qualitative&scheme=Set1&n=3](http://colourbrewer2.org/#type=qualitative&scheme=Set1&n=3).
