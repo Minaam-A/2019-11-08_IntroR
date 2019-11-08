@@ -43,7 +43,7 @@ So far we have learnt how to use R with R's in-built functionality that we will 
 <!--image of a package with functions in it-->
 
 ## Tidyverse
-The package that we will be using in this course is called tidyverse.  It is an "umbrella-package" that contains several packages useful for data manipulation and visualisation which work well together such as **`readr`**, **`tidyr`**, **`dplyr`**, **`ggplot2`**, **`tibble`**, etc...  
+The package that we will be using in this course is called tidyverse.  It is an "umbrella-package" that contains several packages useful for data manipulation and visualisation which work well together such as **`readr`**, **`tidyr`**, **`dplyr`**, **`ggplot2`**, **`tibble`**, etc...
 
 <center><img src="img/tidyverse_workflow.png" width = 75%/></center>
 
@@ -56,7 +56,7 @@ Some of the main advantages of _tidyverse_ over _R base_ are:
 1. **Easier to read **
 <p>Bracket subsetting is handy, but it can be cumbersome and difficult to read, especially for complicated operations.</p>
 <!--https://www.onthelambda.com/2014/02/10/how-dplyr-replaced-my-most-common-r-idioms/-->
-_e.g._ Get only the rows that have species as albigula surveyed in the year 1977.
+_e.g._ Get only the rows that have species as _albigula_ surveyed in the year 1977.
 ```{r, echo=TRUE, results=FALSE}
 # R Base
 surveys[surveys$species == "albigula" &
@@ -173,11 +173,11 @@ ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
 
 You can find a list of aesthetics for each type of plot in the [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf).  
 
-We can also add colors for all the points:
+We can also add colours for all the points:
 
-```{r adding-colors, message=FALSE, warning=FALSE, fig.show=TRUE}
+```{r adding-colours, message=FALSE, warning=FALSE, fig.show=TRUE}
 ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
-    geom_point(alpha = 0.1, color = "blue")
+    geom_point(alpha = 0.1, colour = "blue")
 ```
 
 If we would like to try other type of plots on the data, the best thing is to save the ggplot into a variable as below:
@@ -395,7 +395,8 @@ You can also nest functions (*i.e.,* one function inside of another), like this:
 
 ```{r, eval=FALSE}
 surveys_recent <- filter(
-                    select(surveys_complete, species_id, weight, hindfoot_length, year, sex)
+                    select(surveys_complete,
+                           species_id, weight, hindfoot_length, year, sex)
                     , year >= 1995)
 ```
 
@@ -456,7 +457,7 @@ surveys_recent
                   filter(year >= 1995)
 >ggplot(mapping = aes(x = weight, y = hindfoot_length)) +
 >  geom_point(data = surveys_complete) +
->  geom_point(data = survey_recent, color = "red")
+>  geom_point(data = survey_recent, colour = "red")
 >```
 >**Note:** In the example above we did not specify the `data` argument in the `ggplot` function because the arguments in the `ggplot` function should be common throughout the whole plot.  In this case we specified the respective data as separate layers in 2 different `geom_point` plots; the first plot is the data with all the animals in `surveys_complete` (points in black), the second plot is layered on top of the first plot which is a subset of the `surveys_complete` dataset (points in red).
 
@@ -505,7 +506,9 @@ There are other ways on how to create new columns.  Refer to the dplyr cheat she
 >    geom_boxplot()
 >```
 >
->You might notice that this code produces a warning message about the continuous data type of the x-axis and also creates a box plot with one single box and whisker averaged over all the years on the x-axis, rather than one for each year in the dataset as requested.  As shown in the [`ggplot2` cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf), box plots display a discrete variable on the x-axis and a continuous variable on the y-axis.  At the moment `year` is treated as a continuous variable since its data type is `double`  (you can see this from the tibble).  To fix this, we need to convert the data type of the `year` column to a categorical one (`factor`) so that each year can be plotted as a separate box and whisker.  The `forcats` package that is part of `tidyverse` has the [`as_factor`](https://forcats.tidyverse.org/reference/as_factor.html) function which does just that; it converts a variable into a factor. See the updated code below, which uses the `as_factor` function: 
+>You might notice that this code produces a warning message about the continuous data type of the x-axis and also creates a box plot with one single box and whisker averaged over all the years on the x-axis, rather than one for each year in the dataset as requested.  As shown in the [`ggplot2` cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf), box plots display a discrete variable on the x-axis and a continuous variable on the y-axis.  At the moment `year` is treated as a continuous variable since its data type is `double`  (you can see this from the tibble).  To fix this, we need to convert the data type of the `year` column to a categorical one (`factor`) so that each year can be plotted as a separate box and whisker.
+>
+>The `forcats` package that is part of `tidyverse` has the [`as_factor`](https://forcats.tidyverse.org/reference/as_factor.html) function which does just that; it converts a variable into a factor. See the updated code below, which uses the `as_factor` function: 
 >
 >```{r, answer=TRUE, eval=TRUE}
 >surveys_complete %>%
@@ -550,7 +553,7 @@ There are other ways on how to create new columns.  Refer to the dplyr cheat she
 
 To sort your data `dplyr` provides function `arrange`.  
 ```{r}
-#sort weight in ascending order
+# Sort weight in ascending order (default)
 surveys_complete %>%
   arrange(weight)
 ```
@@ -561,7 +564,7 @@ paged_table(surveys_complete %>% arrange(weight))
 
 To sort your data in descending order you will need to use `desc()`.
 ```{r}
-#sort weight in descending order 
+# Sort weight in descending order 
 surveys_complete %>%
   arrange(desc(weight))
 ```
@@ -572,7 +575,7 @@ paged_table(surveys_complete %>% arrange(desc(weight)))
 
 You can sort your dataset based on the values of multiple columns:
 ```{r}
-#sort weight in ascending order and hindfoot_length in descending order
+# Sort weight in ascending order and hindfoot_length in descending order
 surveys_complete %>%
   arrange(weight, desc(hindfoot_length))
 ```
@@ -657,19 +660,19 @@ ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
      geom_line()
 ```
 
-Unfortunately, this does not work because ``ggplot` plotted data for all the genera
-together. We need to tell `ggplot` to draw a line for each genus by modifying
-the aesthetic function to include `group = genus`:
+Unfortunately, this does not work because `ggplot` plotted data for all the genera
+together. We need to tell `ggplot` to draw a line for each genus by telling it that each genus forms a group.
+To do this we have to modify the aesthetic function to include `group = genus`:
 
 ```{r time-series-by-species, purl=FALSE}
 ggplot(data = yearly_counts, mapping = aes(x = year, y = n, group = genus)) +
     geom_line()
 ```
 
-This creates a line for each genus. However, since they are all in the same colour we are not able to distinguish which genus is which.  If we use a different colour for each genus the plot should be clear. This is done by using the argument `color` in the aesthetic function (using `color` also automatically groups the data):
+This creates a line for each genus. However, since they are all in the same colour we are not able to distinguish which genus is which.  If we use a different colour for each genus the plot should be clear. This is done by using the argument `colour` in the aesthetic function (using `colour` also automatically groups the data):
 
-```{r time-series-with-colors, purl=FALSE}
-ggplot(data = yearly_counts, mapping = aes(x = year, y = n, color = genus)) +
+```{r time-series-with-colours, purl=FALSE}
+ggplot(data = yearly_counts, mapping = aes(x = year, y = n, colour = genus)) +
     geom_line()
 ```
 
@@ -684,12 +687,14 @@ Let us plot a histogram for the continuous variable `weight`:
 ggplot(surveys_complete, aes(weight)) +
   geom_histogram()
 ```
+
 You can identify display categories in the histogram by plotting a stacked histogram which will show categories for each group stacked on top of each other.  This is done by using the `fill` argument in the aesthetic function.  If we want to display `sex` in our `weight` histogram:
 
 ```{r, fig.show=TRUE, message=FALSE}
-ggplot(surveys_complete, aes(weight, fill=sex)) +
-  geom_histogram(bins=100)
+ggplot(surveys_complete, aes(weight, fill = sex)) +
+  geom_histogram(bins = 100)
 ```
+
 Note that the default number of bins in a histogram is 30.  To get have a granular display you can increase the number of bins by using the argument `bins` in the `geom_histogram` function as above.
 
 There are other plots that can be used for a single continuous variable (see ONE VARIABLE continuous section on [ggplot2 cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf)).
@@ -698,10 +703,10 @@ There are other plots that can be used for a single continuous variable (see ONE
 > ### Challenge - `geom_freqpoly()`
 >
 >Use the `geom_freqpoly()` to display frequency polygons instead of bars for the distribution of `weight`.  Show `sex` category as before in a different colour.  
->**Hint:** Use the argument `color` in the aesthetic function rather than `fill` to display a frequency polygon for each `sex` category in a different colour.  
+>**Hint:** Use the argument `colour` in the aesthetic function rather than `fill` to display a frequency polygon for each `sex` category in a different colour.  
 >
 >```{r, answer=TRUE, message=FALSE}
->ggplot(surveys_complete, aes(weight, color=sex)) +
+>ggplot(surveys_complete, aes(weight, colour = sex)) +
 >  geom_freqpoly()
 >```
 
@@ -716,13 +721,13 @@ Let us work on an example on how we can apply the split-apply-combine strategy o
 
 ```{r, results=TRUE}
 surveys_complete %>%
-  #extract females
-  filter(sex=="F") %>%
+  # Extract females
+  filter(sex == "F") %>%
   summarise(mean_weight = mean(weight))
 
 surveys_complete %>%
-  #extract males
-  filter(sex=="M") %>%
+  # Extract males
+  filter(sex == "M") %>%
   summarise(mean_weight = mean(weight))
 ```
 
@@ -730,24 +735,24 @@ However, this would be a very tedious process to do if we had several categories
 ```{r, results=TRUE}
 surveys_complete %>%
   group_by(sex) %>%
-  summarise(mean_weight=mean(weight))
+  summarise(mean_weight = mean(weight))
 ```
 
 You can also group by multiple columns:
 ```{r, results=TRUE}
 surveys_complete %>%
   group_by(sex, species_id) %>%
-  summarize(mean_weight = mean(weight))
+  summarise(mean_weight = mean(weight))
 ```
 
-Once the data are grouped, you can also summarize multiple variables at the same
+Once the data are grouped, you can also summarise multiple variables at the same
 time (and not necessarily on the same variable). For instance, we could add a
 column indicating the minimum weight for each species for each sex:
 
 ```{r, results=TRUE}
 surveys_complete %>%
   group_by(sex, species_id) %>%
-  summarize(mean_weight = mean(weight),
+  summarise(mean_weight = mean(weight),
             min_weight = min(weight))
 ```
 
@@ -755,7 +760,7 @@ surveys_complete %>%
 >
 >1. Use `group_by()` and `summarise()` to find the mean, min, and max hindfoot
 > length for each species (using `species_id`). Also add the number of
-> observations (hint: see `?n`).
+> observations in a column called `n_obs` (hint: see `?n`).
 >
 > ```{r, answer=TRUE, results=TRUE}
 > surveys_complete %>%
@@ -764,7 +769,7 @@ surveys_complete %>%
 >         mean_hindfoot_length = mean(hindfoot_length),
 >         min_hindfoot_length = min(hindfoot_length),
 >         max_hindfoot_length = max(hindfoot_length),
->         n = n()
+>         n_obs = n()
 >     )
 >```
 >
@@ -804,7 +809,7 @@ As you can see, each genus has been plotted as a separate plot.  It is now clear
 ```{r, fig.show=TRUE}
 ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
     geom_line() +
-    facet_wrap(facets = vars(genus), scales="free")
+    facet_wrap(facets = vars(genus), scales = "free")
 ```
 
 The pattern of the graphs that before were hardly visible, *e.g.,* Baiomys, is now clear as the axes have been rescaled to fit the data.  This is the main advantage of using **free scales**.  The disadvantage is that the different plots are not comparable as before.  
@@ -820,7 +825,7 @@ yearly_sex_counts
 ```
 This should now allow us to also split by `sex`.  We can use colour to distinguish between the `sex` categories:
 ```{r, fig.show=TRUE}
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color = sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
   geom_line() +
   facet_wrap(facets = vars(genus))
 ```
@@ -831,7 +836,7 @@ Let us do the same thing with `facet_grid()` so that we can understand the diffe
 ```{r, fig.show=TRUE} 
 ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
     geom_line() +
-    #display the genera as columns
+    # Display the genera as columns
     facet_grid(cols = vars(genus))
 ```
 
@@ -841,7 +846,7 @@ Let us split the plots by `sex` as well by plotting `sex` as the rows:
 ggplot(data = yearly_sex_counts, 
   mapping = aes(x = year, y = n)) +
   geom_line() +
-  facet_grid(rows = vars(sex), cols =  vars(genus))
+  facet_grid(rows = vars(sex), cols = vars(genus))
 ```
 
 >More information on further functionality of facetting can be found in the [`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html) and [`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html) documentation.  
@@ -853,7 +858,7 @@ ggplot(data = yearly_sex_counts,
 >
 >```{r, answer=TRUE}
 ggplot(data = yearly_sex_counts, 
-  mapping = aes(x = year, y = n, color=sex)) +
+  mapping = aes(x = year, y = n, colour = sex)) +
   geom_line() +
   facet_grid(cols = vars(genus))
 >```
@@ -880,7 +885,7 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n)) +
 The major item that needs fixing in the plot is the text on the x-axis as this crammed and is not readable at the moment. This is mainly due to the fact that the size of the plot is dependent on the size of the window (in this case RStudio).  You can work around this by saving your plot to a file and specifying the width of the plot ([see Saving a plot to a file section](#saveplot)). **Themes** in the `ggplot2` package control the display of all non-data elements of the plot.  Let us start customising the text on the x-axis by changing its size and position using the `theme` function.  Note that `theme()` has several other arguments and you can read more about them in the [`theme()` documentation](https://ggplot2.tidyverse.org/reference/theme.html).
 
 ```{r, fig.show=TRUE}         
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     geom_line() +
     facet_grid(cols = vars(genus)) +
     labs(title = "Observed genera through time",
@@ -894,10 +899,10 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
          
 ### Legend
 
-With the plot already looking better, the last thing we would like to change is the legend.  Legends are very tricky in `ggplot2` as the fuction to use is determined by the data that is being displayed.  In this case the legend has been created based on color groupings.  Therefore we can change the lengend title, categories and color as follows:
+With the plot already looking better, the last thing we would like to change is the legend.  Legends are very tricky in `ggplot2` as the fuction to use is determined by the data that is being displayed.  In this case the legend has been created based on colour groupings.  Therefore we can change the lengend title, categories and colour as follows:
 
 ```{r, fig.show=TRUE}         
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     geom_line() +
     facet_grid(cols = vars(genus)) +
     labs(title = "Observed genera through time",
@@ -906,13 +911,13 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
     theme(axis.text.x = element_text(size=7, angle=90, vjust=0.5), 
           axis.text.y = element_text(size=7), 
           strip.text=element_text(size=7, angle=45)) +
-    scale_color_brewer("Sex", 
+    scale_colour_brewer("Sex", 
                        palette="Set1", 
                        breaks=c("F", "M"), 
                        labels=c("Female", "Male"))
 ```
 
->Note: If you would like to see what other palettes are available please see [http://colorbrewer2.org/#type=qualitative&scheme=Set1&n=3](http://colorbrewer2.org/#type=qualitative&scheme=Set1&n=3).
+>Note: If you would like to see what other palettes are available please see [http://colourbrewer2.org/#type=qualitative&scheme=Set1&n=3](http://colourbrewer2.org/#type=qualitative&scheme=Set1&n=3).
 
 ### Themes
 
@@ -932,12 +937,12 @@ A list of themes can be found in the [`ggplot2` documentation](https://ggplot2.t
 >```{r, answer=TRUE, fig.show=TRUE}
 >surveys_complete %>%
   group_by(year, species) %>%
-  summarize(avg_weight = mean(weight)) %>%
-  ggplot(mapping = aes(x=year, y=avg_weight)) +
+  summarise(avg_weight = mean(weight)) %>%
+  ggplot(mapping = aes(x = year, y = avg_weight)) +
     geom_line() +
-    facet_wrap(vars(species)) +
+    facet_wrap(facets = vars(species)) +
     theme_bw() +
-    theme(axis.text.x = element_text(angle=90, vjust=0.5))
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
 >```
 
 <br/>
