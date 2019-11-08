@@ -20,7 +20,6 @@
 data*/
 portal-database.sqlite
 .secret/
-_site/
 
 # output from linkchecker
 link_res.csv
