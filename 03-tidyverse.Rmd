@@ -541,7 +541,7 @@ There are other ways on how to create new columns.  Refer to the dplyr cheat she
 >
 >As mentioned the boxplot is used to visualise the distribution of a continuous variable.  In the example above we displayed the distribution of `weight` over the different years.  The figure below illustrates the different components of the boxplot. The bottom line of the box represents the 25th quantile, middle line the 50th quantile (or median) and the top line of the box is the 75th quantile. The whiskers can be thought of as defining the boundary of the confidence intervals of the distribution.  The dots outside these whiskers are the outliers.  
 >
-><center><img src="images_raw/boxplot.png" width="60%"/></center>
+><center><img src="img/boxplot.png" width="60%"/></center>
 >
 
 <br/>
@@ -710,7 +710,7 @@ There are other plots that can be used for a single continuous variable (see ONE
 ## Grouping data
 In the examples above we learnt how to summarise data over all observations, *e.g.,* we calculated the mean over all observations using the `summarise` function. However, in data analysis, especially when dealing with big data, a common approach to data exploration is the [**split-apply-combine**](https://www.jstatsoft.org/article/view/v040i01) strategy. The idea behind this strategy is to split the data into more managable pieces, apply any operations required on the data independently on each piece and then combine the results together. The figure below illustrates the approach that is done in the split-apply-combine approach.
 
-![](images_raw/split-apply-combine.svg)  
+![](img/split-apply-combine.svg)  
 
 Let us work on an example on how we can apply the split-apply-combine strategy on the `surveys_complete` dataset.  We would like to split the data by the different categories present in the `sex` column and calculate the mean weight for each category.  We can do this as follows:
 
