@@ -786,7 +786,7 @@ surveys_complete %>%
 
 <br/>
 
-# Reshaping data with pivot
+## Reshaping data - pivot
 
 In the data exploration workflow we discussed how to structure our data leading to the four rules defining a tidy
 dataset:
@@ -818,7 +818,7 @@ a variable.
 We can do both these of transformations with two `tidyr` functions, `pivot_wider()`
 and `pivot_longer()`.
 
-## Widening data with `pivot_wider()`
+### Widening data with `pivot_wider()`
 
 `pivot_wider()` takes three principal arguments:
 
@@ -858,6 +858,8 @@ str(surveys_wider)
 
 We could now plot comparisons between the weight of genera in different plots, 
 although we may wish to fill in the missing values first, using the `values_fill` argument.
+**Note**: be careful when replacing `NA` with zero, since a `mean_weight` of would be recognised as an actual measurement,
+and not as a missing value!
 
 ```{r, purl=FALSE}
 surveys_gw %>%
@@ -868,7 +870,7 @@ surveys_gw %>%
     )
 ```
 
-## Lengthening data with `pivot_longer`
+### Lengthening data with `pivot_longer`
 
 The opposing situation could occur if we had been provided with data in the
 form of `surveys_wider`, where the genus names are column names, but we 
