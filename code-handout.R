@@ -262,7 +262,7 @@ ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
     geom_point(alpha = 0.1)
 
 ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
-    geom_point(alpha = 0.1, color = "blue")
+    geom_point(alpha = 0.1, colour = "blue")
 
 # Assign plot to a variable
 surveys_plot <- ggplot(data = surveys, 
@@ -332,7 +332,8 @@ surveys_complete <- drop_na(surveys)
 ## surveys_recent <- filter(surveys2, year >= 1995)
 
 ## surveys_recent <- filter(
-##                     select(surveys_complete, species_id, weight, hindfoot_length, year, sex)
+##                     select(surveys_complete,
+##                            species_id, weight, hindfoot_length, year, sex)
 ##                     , year >= 1995)
 
 ## surveys_complete %>%
@@ -359,7 +360,7 @@ survey_recent <- surveys_complete %>%
                   filter(year >= 1995)
 ggplot(mapping = aes(x = weight, y = hindfoot_length)) +
   geom_point(data = surveys_complete) +
-  geom_point(data = survey_recent, color = "red")
+  geom_point(data = survey_recent, colour = "red")
 
 
 
@@ -400,19 +401,19 @@ surveys_complete %>%
   ggplot(mapping = aes(x = as_factor(year), y = weight_kg)) +
     geom_boxplot()
 
-#sort weight in ascending order
+# Sort weight in ascending order (default)
 surveys_complete %>%
   arrange(weight)
 library(rmarkdown)
 paged_table(surveys_complete %>% arrange(weight))
 
-#sort weight in descending order 
+# Sort weight in descending order 
 surveys_complete %>%
   arrange(desc(weight))
 library(rmarkdown)
 paged_table(surveys_complete %>% arrange(desc(weight)))
 
-#sort weight in ascending order and hindfoot_length in descending order
+# Sort weight in ascending order and hindfoot_length in descending order
 surveys_complete %>%
   arrange(weight, desc(hindfoot_length))
 library(rmarkdown)
@@ -451,33 +452,33 @@ yearly_counts
 ggplot(surveys_complete, aes(weight)) +
   geom_histogram()
 
-ggplot(surveys_complete, aes(weight, fill=sex)) +
-  geom_histogram(bins=100)
+ggplot(surveys_complete, aes(weight, fill = sex)) +
+  geom_histogram(bins = 100)
 
-ggplot(surveys_complete, aes(weight, color=sex)) +
+ggplot(surveys_complete, aes(weight, colour = sex)) +
   geom_freqpoly()
 
 surveys_complete %>%
-  #extract females
-  filter(sex=="F") %>%
+  # Extract females
+  filter(sex == "F") %>%
   summarise(mean_weight = mean(weight))
 
 surveys_complete %>%
-  #extract males
-  filter(sex=="M") %>%
+  # Extract males
+  filter(sex == "M") %>%
   summarise(mean_weight = mean(weight))
 
 surveys_complete %>%
   group_by(sex) %>%
-  summarise(mean_weight=mean(weight))
+  summarise(mean_weight = mean(weight))
 
 surveys_complete %>%
   group_by(sex, species_id) %>%
-  summarize(mean_weight = mean(weight))
+  summarise(mean_weight = mean(weight))
 
 surveys_complete %>%
   group_by(sex, species_id) %>%
-  summarize(mean_weight = mean(weight),
+  summarise(mean_weight = mean(weight),
             min_weight = min(weight))
 
 surveys_complete %>%
@@ -486,7 +487,7 @@ surveys_complete %>%
         mean_hindfoot_length = mean(hindfoot_length),
         min_hindfoot_length = min(hindfoot_length),
         max_hindfoot_length = max(hindfoot_length),
-        n = n()
+        n_obs = n()
     )
 
 surveys_complete %>%
@@ -501,29 +502,29 @@ ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
 
 ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
     geom_line() +
-    facet_wrap(facets = vars(genus), scales="free")
+    facet_wrap(facets = vars(genus), scales = "free")
 
 yearly_sex_counts <- surveys_complete %>%
                       count(year, genus, sex)
 
 yearly_sex_counts
 
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color = sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
   geom_line() +
   facet_wrap(facets = vars(genus))
 
 ggplot(data = yearly_counts, mapping = aes(x = year, y = n)) +
     geom_line() +
-    #display the genera as columns
+    # Display the genera as columns
     facet_grid(cols = vars(genus))
 
 ggplot(data = yearly_sex_counts, 
   mapping = aes(x = year, y = n)) +
   geom_line() +
-  facet_grid(rows = vars(sex), cols =  vars(genus))
+  facet_grid(rows = vars(sex), cols = vars(genus))
 
 ggplot(data = yearly_sex_counts, 
-  mapping = aes(x = year, y = n, color=sex)) +
+  mapping = aes(x = year, y = n, colour = sex)) +
   geom_line() +
   facet_grid(cols = vars(genus))
 
@@ -534,29 +535,29 @@ ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n)) +
        x = "Year of observation",
        y = "Number of animals")
 
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     geom_line() +
     facet_grid(cols = vars(genus)) +
     labs(title = "Observed genera through time",
          x = "Year of observation",
          y = "Number of animals")  +
-    theme(axis.text.x = element_text(size=7, angle=90, vjust=0.5), 
-          axis.text.y = element_text(size=7), 
-          strip.text=element_text(size=7, angle=45))
+    theme(axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5), 
+          axis.text.y = element_text(size = 7), 
+          strip.text=element_text(size = 7, angle = 45))
 
-ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, color=sex)) +
+ggplot(data = yearly_sex_counts, mapping = aes(x = year, y = n, colour = sex)) +
     geom_line() +
     facet_grid(cols = vars(genus)) +
     labs(title = "Observed genera through time",
          x = "Year of observation",
          y = "Number of animals")  +
-    theme(axis.text.x = element_text(size=7, angle=90, vjust=0.5), 
-          axis.text.y = element_text(size=7), 
-          strip.text=element_text(size=7, angle=45)) +
-    scale_color_brewer("Sex", 
-                       palette="Set1", 
-                       breaks=c("F", "M"), 
-                       labels=c("Female", "Male"))
+    theme(axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5), 
+          axis.text.y = element_text(size = 7), 
+          strip.text = element_text(size = 7, angle = 45)) +
+    scale_colour_brewer("Sex", 
+                       palette = "Set1", 
+                       breaks = c("F", "M"), 
+                       labels = c("Female", "Male"))
 
 ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
   geom_point() +
@@ -564,11 +565,29 @@ ggplot(data = surveys, mapping = aes(x = weight, y = hindfoot_length)) +
 
 surveys_complete %>%
   group_by(year, species) %>%
-  summarize(avg_weight = mean(weight)) %>%
-  ggplot(mapping = aes(x=year, y=avg_weight)) +
+  summarise(avg_weight = mean(weight)) %>%
+  ggplot(mapping = aes(x = year, y = avg_weight)) +
     geom_line() +
-    facet_wrap(vars(species)) +
+    facet_wrap(facets = vars(species)) +
     theme_bw() +
-    theme(axis.text.x = element_text(angle=90, vjust=0.5))
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 write_csv(surveys_complete, path = "data_output/surveys_complete.csv")
