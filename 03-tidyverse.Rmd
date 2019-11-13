@@ -947,6 +947,199 @@ A list of themes can be found in the [`ggplot2` documentation](https://ggplot2.t
 
 <br/>
 
+## Reshaping with pivot
+
+In the data exploration workflow we discussed how to structure our data leading to the four rules defining a tidy
+dataset:
+
+1. Each variable has its own column
+2. Each observation has its own row
+3. Each value must have its own cell
+4. Each type of observational unit forms a table
+
+Here we examine the fourth rule: Each type of observational unit forms a table.
+
+In `surveys` , the rows of `surveys` contain the values of variables associated
+with each record (the unit), values such as the weight or sex of each animal 
+associated with each record. What if instead of comparing records, we 
+wanted to compare the different mean weight of each genus between plots? (Ignoring `plot_type` for simplicity).
+
+We'd need to create a new table where each row (the unit) is comprised of values of variables associated with each plot. In practical terms this means the values
+in `genus` would become the names of column variables and the cells would contain the values of the mean weight observed on each plot.
+
+Having created a new table, it is therefore straightforward to explore the 
+relationship between the weight of different genera within, and between, the
+plots. The key point here is that we are still following a tidy data structure,
+but we have **reshaped** the data according to the observations of interest:
+average genus weight per plot instead of recordings per date.
+
+The opposite transformation would be to transform column names into values of
+a variable.
+
+We can do both these of transformations with two `tidyr` functions, `pivot_wider()`
+and `pivot_longer()`.
+
+### Widening data with `pivot_wider()`
+
+`pivot_wider()` takes three principal arguments:
+
+1. the `data` 
+2. the `names_from` column variable whose values will become new column names.  
+3. the `values_from` column variable whose values will fill the new column variables.
+
+Further arguments include `values_fill` which, if set, fills in missing values with 
+the value provided.
+
+Let's use `pivot_wider()` to transform surveys to find the mean weight of each 
+genus in each plot over the entire survey period. We use `filter()`,
+`group_by()` and `summarise()` to filter our observations and variables of 
+interest, and create a new variable for the `mean_weight`. We use the pipe as 
+before too.
+
+```{r, purl=FALSE}
+surveys_gw <- surveys %>%
+  filter(!is.na(weight)) %>%
+  group_by(plot_id, genus) %>%
+  summarise(mean_weight = mean(weight))
+str(surveys_gw)
+```
+
+This yields `surveys_gw` where the observations for each plot are spread across
+multiple rows, 196 observations of 3 variables. 
+Using `pivot_wider()` to key on `genus` with values from `mean_weight` this becomes
+24 observations of 11 variables, one row for each plot. We again use pipes:
+
+```{r, purl=FALSE}
+surveys_wider <- surveys_gw %>%
+  pivot_wider(names_from = genus, values_from = mean_weight)
+str(surveys_wider)
+```
+
+<!-- ![](img/spread_data_R.png) -->
+
+We could now plot comparisons between the weight of genera in different plots, 
+although we may wish to fill in the missing values first, using the `values_fill` argument.
+
+```{r, purl=FALSE}
+surveys_gw %>%
+  pivot_wider(
+    names_from = genus,
+    values_from = mean_weight,
+    values_fill = list(mean_weight = 0)
+    )
+```
+
+### Lengthening data with `pivot_longer`
+
+The opposing situation could occur if we had been provided with data in the
+form of `surveys_wider`, where the genus names are column names, but we 
+wish to treat them as values of a genus variable instead.
+
+In this situation we are lenghtening the data by taking the column names and turning them into a
+pair of new variables. One variable represents the column names as values, and
+the other variable contains the values previously associated with the column names.
+
+`pivot_longer()` takes four principal arguments:
+
+1. the `data`
+2. the `cols` containing the names of the columns we want to pivot into a longer format
+3. the `names_to` containing a string specifying the name of the column to create from the data stored in the column names of `data`
+4. the `values_to`containing a string specifying the name of the column to create from the data stored in cell values.
+
+To recreate `surveys_gw` from `surveys_wider` we would create a column using `names_to` called
+`genus`. We would also need to create a column called `mean_weight` using the `values_to` argument.
+Lastly, we would use all columns apart from `plot_id` to pivot into a longer format. Here we drop `plot_id` column with a minus sign.
+
+```{r, purl=FALSE}
+surveys_longer <- surveys_wider %>%
+  pivot_longer(
+    cols = -plot_id,
+    names_to = "genus",
+    values_to = "mean_weight")
+str(surveys_longer)
+```
+
+<!-- ![](img/gather_data_R.png) -->
+
+Note that now the `NA` genera are included in the longer format. Making data wider
+and then longer can be a useful way to balance out a dataset so every
+replicate has the same composition.
+
+We could also have used a specification for what columns to include. This can be
+useful if you have a large number of identifying columns, and it's easier to
+specify what to gather than what to leave alone. And if the columns are in a
+row, we don't even need to list them all out - just use the `:` operator!
+
+```{r, purl=FALSE}
+surveys_wider %>%
+  pivot_longer(
+    cols = Baiomys:Spermophilus,
+    names_to = "genus",
+    values_to = "mean_weight") %>%
+  head()
+```
+
+> ### Challenge {.challenge}
+>
+> 1. Take the `surveys` data frame and make it wider, using `year` as columns, `plot_id` 
+>   as rows, and the
+>   number of genera per plot as the values. You will need to summarise before
+>   reshaping, and use the function `n_distinct()` to get the number of unique
+>   genera within a particular chunk of data. It's a powerful function! See
+>   `?n_distinct` for more.
+> 
+> ```{r, answer=TRUE, purl=FALSE}
+> surveys_wider_genera <- surveys %>%
+>   group_by(plot_id, year) %>%
+>   summarise(n_genera = n_distinct(genus)) %>%
+>   pivot_wider(names_from = year, values_from = n_genera)
+> 
+> head(surveys_wider_genera)
+> ```
+>
+> 2. Now take that data frame and `pivot_longer()` it again, so each row is a unique
+>    `plot_id` by `year` combination.
+>
+> ```{r, answer=TRUE, purl=FALSE}
+> surveys_wider_genera %>%
+>   pivot_longer(
+>   cols = -plot_id,
+>   names_to = "year",
+>   values_to = "n_genera")
+> ```
+>
+> 3. The `surveys` data set has
+>    two measurement columns: `hindfoot_length` and `weight`.  This makes it
+>    difficult to do things like look at the relationship between mean values of
+>    each measurement per year in different plot types. Let's walk through a
+>    common solution for this type of problem. First, use `pivot_longer()` to create a
+>     dataset where we have a key column called `measurement` and a
+>    `value` column that takes on the value of either `hindfoot_length` or
+>    `weight`. *Hint*: You'll need to specify which columns are being pivoted.
+>
+> ```{r, answer=TRUE, purl=FALSE}
+> surveys_long <- surveys %>%
+>   pivot_longer(
+>   cols = c(hindfoot_length, weight),
+>   names_to = "measurement",
+>   values_to = "value")
+> ```
+>
+> 4. With this new data set, calculate the average of each
+>    `measurement` in each `year` for each different `plot_type`. Then make the data set wider using
+>    `pivot_wider()` with a column for `hindfoot_length` and
+>    `weight`. *Hint*: You only need to specify the name and value
+>    columns for `pivot_wider()`.
+>
+> ```{r, answer=TRUE, purl=FALSE}
+> surveys_long %>%
+>   group_by(year, measurement, plot_type) %>%
+>   summarise(mean_value = mean(value, na.rm = TRUE)) %>%
+>   pivot_wider(names_from = measurement, values_from = mean_value)
+> ```
+
+<br/>
+
 # Exporting/Writing data to files
 
 Now that you have learned how to use **`dplyr`** to transform your raw data, you may want to export these new datasets to share them with your collaborators or for archival.
