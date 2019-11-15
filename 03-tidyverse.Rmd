@@ -1,6 +1,6 @@
 ---
 title: Data manipulation and visualisation with tidyverse
-author: Alexia Cardona
+author: Alexia Cardona & Martin van Rongen
 ---
 
 ```{r, echo=FALSE, purl=FALSE, message = FALSE}
