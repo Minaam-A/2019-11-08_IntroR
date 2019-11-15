@@ -981,6 +981,53 @@ surveys_wider %>%
 
 <br/>
 
+## Reshaping data - joining tables
+
+Often data is spread out over multiple tables, instead of in one large, single table. Why collect data in multiple tables? 
+- Not efficient to include all information in a single table.
+- Redundant information makes it more difficult to update or revise data.
+  - Make changes in one place, not hundreds of places.
+- Use multiple tables
+- Each table contains a single kind of information, for example in our case we could split the data into three tables:
+  - `surveys`: information about individuals
+  - `species`: information about species
+  - `plots`: information about plots
+- If a species name changes we only need to change it in the species table
+- Connect tables using joins to describe relationships between tables
+
+To illustrate the joining of different tables we will create two tables: `hindfoot_length_join` and `weight_join`, which contain the average `hindfoot_length` and `weight` per genus, respectively. To simplify the example, we are only using three genera, two of which are common between the tables. These are taken using the `slice` function. For more information, see `?slice`.
+
+```{r, eval=TRUE, results=TRUE, purl=FALSE}
+# Create a summary table for mean hindfoot_length
+hindfoot_length_join <- surveys %>%
+  group_by(genus) %>% 
+  summarise(hindfoot_length = mean(hindfoot_length, na.rm = TRUE)) %>% 
+  slice(4,8,11)
+
+# Create a summary table for mean weight
+weight_join <- surveys %>%
+  group_by(genus) %>% 
+  summarise(weight = mean(weight, na.rm = TRUE)) %>% 
+  slice(4,8,15)
+
+hindfoot_length_join
+weight_join
+```
+As can be seen above, the _Baiomys_ and _Chaetodipus_ genera are common between the two tables. _Dipodomys_ only occurs in `hindfoot_length_join` and _Perognathus_ only in `weight_join`.
+
+Joining of tables is done using the **mutating join** functions in [`dplyr` documentation](https://dplyr.tidyverse.org/reference/join.html). All of `join` functions take three arguments, two table names (the tables to join, the left-hand side and right-hand side) and a common key defined in `by =`. Here we look at the four most commonly used `join` functions, which are illustrated in the image below.
+
+1. `left-join`. This joins matching rows from the right-hand side table to the left-hand side table.
+2. `right_join`. This joins matching rows from the left-hand side table to the right-hand side table.
+3. `inner_join`. This retains only rows that occur in both tables.
+4. `full_join`. This retains _all_ values from _all_ rows.
+
+In this case we want to join the data by `genus`, so we use `by = genus` as the common key.
+
+![](img/join_examples.png)
+
+<br/>
+
 # Further visualisations
 
 ## Facetting
